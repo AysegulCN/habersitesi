@@ -83,6 +83,12 @@ namespace habersite.Controllers
             return View("~/Views/Account/Page404.cshtml");
         }
 
+        public IActionResult Tables()
+        {
+            ViewData["Title"] = " Tablolar";
+            return View("~/Views/Admin/Tables.cshtml");
+        }
+
 
 
     }
