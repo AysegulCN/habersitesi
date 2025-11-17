@@ -1,0 +1,60 @@
+﻿@* Views/Admin/Charts.cshtml *@
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Site İstatistikleri ve Raporlar";
+}
+
+@section Head {
+}
+
+<div class="container-fluid">
+
+    <h1 class="h3 mb-2 text-gray-800">@ViewData["Title"]</h1>
+    <p class="mb-4">Bu sayfada, sitenizin performansına dair güncel istatistikleri ve raporları görebilirsiniz.</p>
+
+    <div class="row">
+
+        <div class="col-xl-8 col-lg-7">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Günlük Ziyaretçi Grafiği (Son 7 Gün)</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-area">
+                        <canvas id="myAreaChart"></canvas>
+                    </div>
+                    <hr>
+                    Burada, haber portalınızın son bir haftadaki günlük ziyaretçi sayısı gösterilecektir.
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-4 col-lg-5">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Kategori Dağılımı</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-pie pt-4">
+                        <canvas id="myPieChart"></canvas>
+                    </div>
+                    <hr>
+                    Sitenizdeki haberlerin kategori bazında yüzde dağılımı.
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@* ******************************************************************* *@
+@* GRAFİKLER İÇİN GEREKLİ JAVASCRIPT BÖLÜMÜ (DÜZELTİLDİ) *@
+@* ******************************************************************* *@
+
+@section Scripts {
+    <script src="~/vendor/chart.js/Chart.min.js"></script>
+    <script src="~/js/demo/chart-area-demo.js"></script>
+    <script src="~/js/demo/chart-pie-demo.js"></script>
+    <script src="~/js/demo/chart-bar-demo.js"></script>
+}
