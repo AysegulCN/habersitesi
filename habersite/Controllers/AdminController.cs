@@ -15,6 +15,12 @@ namespace habersite.Controllers
             ViewData["Title"] = "Haber Listesi"; 
             return View(); 
         }
+
+        public IActionResult Last()
+        {
+            ViewData["Title"] = "Son Dakika Haber";
+            return View();
+        }
         public IActionResult CategoryList()
         {
             ViewData["Title"] = "Kategori Yönetimi";
@@ -23,10 +29,7 @@ namespace habersite.Controllers
 
         public IActionResult Raporlar()
         {
-            // Bu, sayfanın başlığını belirler.
             ViewData["Title"] = "Site İstatistikleri ve Raporlar";
-
-            // Bu kod, Views/Admin/Charts.cshtml dosyasını arar ve yükler.
             return View();
         }
         public IActionResult Ekonomi()

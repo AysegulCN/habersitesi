@@ -47,7 +47,7 @@
 
 
             <li class="nav-item">
-                <a class="nav-link" asp-controller="Admin" asp-action="NewsList">
+                <a class="nav-link" asp-controller="Admin" asp-action="Last">
                     <i class="fas fa-fw fa-chart-area"></i>
                     <span>SON DAKİKA</span>
                 </a>
@@ -85,7 +85,7 @@
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
                    aria-expanded="true" aria-controls="collapsePages">
                     <i class="fas fa-fw fa-wrench"></i>
-                    <span>SİSTEM & SAYFALAR</span>
+                    <span>Sistem & Sayfalar</span>
                 </a>
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
@@ -106,6 +106,22 @@
                     </div>
                 </div>
             </li>
+
+            @* Views/Shared/_Layout.cshtml dosyasına ekleyin *@
+
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Admin" asp-action="CreateNews">
+                    <i class="fas fa-fw fa-pen"></i> @* Kalem ikonu uygun olur *@
+                    <span>Yeni Haber Ekle</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Admin" asp-action="NewsList">
+                    <i class="fas fa-fw fa-list"></i>
+                    <span>Haber Listesi</span> @* NewsList linkiniz *@
+                </a>
+            </li>
             <li class="nav-item">
                 <a class="nav-link" asp-controller="Admin" asp-action="Raporlar">
                     <i class="fas fa-fw fa-chart-area"></i>
@@ -114,12 +130,13 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="~/tables.html">
+                <a class="nav-link" asp-controller="Admin" asp-action="Tables">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Tables</span>
                 </a>
             </li>
 
+            
             <hr class="sidebar-divider d-none d-md-block">
 
             <div class="text-center d-none d-md-inline">
