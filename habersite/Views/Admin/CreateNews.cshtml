@@ -1,0 +1,43 @@
+﻿@model habersite.Models.News
+@{
+    ViewData["Title"] = "Yeni Haber Ekle";
+    var categories = ViewBag.Categories as List<habersite.Models.Category> ?? new List<habersite.Models.Category>();
+}
+
+<div class="container mt-4">
+    <h2>Yeni Haber Ekle</h2>
+
+    @if (!categories.Any())
+    {
+        <div class="alert alert-warning">
+            <strong>Uyarı!</strong> Henüz kategori eklenmemiş. Önce kategori ekleyin.
+            <a href="@Url.Action("CreateCategory")" class="btn btn-sm btn-info">Kategori Ekle</a>
+        </div>
+    }
+
+    <form asp-action="CreateNews" method="post">
+        <div class="mb-3">
+            <label asp-for="CategoryId" class="form-label">Kategori</label>
+            @if (categories.Any())
+            {
+                <select asp-for="CategoryId" class="form-control">
+                    <option value="">Kategori Seçin</option>
+                    @foreach (var category in categories)
+                    {
+
+                        <option value="@category.CategoryId">@category.Name</option>
+                    }
+                </select>
+            }
+            else
+            {
+                <select class="form-control" disabled>
+                    <option>Kategori bulunamadı</option>
+                </select>
+                <small class="text-danger">Önce kategori eklemelisiniz.</small>
+            }
+            <span asp-validation-for="CategoryId" class="text-danger"></span>
+        </div>
+
+    </form>
+</div>
