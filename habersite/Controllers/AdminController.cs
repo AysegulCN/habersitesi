@@ -93,6 +93,82 @@ namespace habersite.Controllers
             var categories = _context.Categories.ToList(); 
             return View(categories);
         }
+        public IActionResult EditCategory(int? id)
+        {
+            if (id == null || id == 0)
+            {
+                return NotFound(); // ID yoksa 404 döndür
+            }
+
+            var categoryFromDb = _context.Categories.Find(id);
+
+            if (categoryFromDb == null)
+            {
+                return NotFound(); // Kategori veritabanında bulunamazsa 404 döndür
+            }
+
+            ViewData["Title"] = $"Kategori Düzenle: {categoryFromDb.Name}";
+            return View(categoryFromDb); // EditCategory.cshtml View'ine kategoriyi gönder
+        }
+
+        // --- KATEGORİ DÜZENLEME (POST) ---
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult EditCategory(Category category)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Categories.Update(category); // Var olan kategoriyi güncelle
+                _context.SaveChanges();
+
+                TempData["SuccessMessage"] = "Kategori başarıyla güncellendi!";
+                return RedirectToAction("CategoryList");
+            }
+
+            ViewData["Title"] = $"Kategori Düzenle: {category.Name}";
+            return View(category);
+        }
+
+        // --- KATEGORİ SİLME (GET) ---
+        public IActionResult DeleteCategory(int? id)
+        {
+            if (id == null || id == 0)
+            {
+                return NotFound();
+            }
+
+            var categoryFromDb = _context.Categories.Find(id);
+
+            if (categoryFromDb == null)
+            {
+                return NotFound();
+            }
+
+            ViewData["Title"] = $"Kategori Sil: {categoryFromDb.Name}";
+            return View(categoryFromDb); // DeleteCategory.cshtml View'ine kategoriyi gönder
+        }
+
+        // --- KATEGORİ SİLME (POST) ---
+        [HttpPost, ActionName("DeleteCategory")] // ActionName, aynı isme sahip iki metodu ayırır
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteCategoryConfirmed(int id)
+        {
+            var categoryFromDb = _context.Categories.Find(id);
+
+            if (categoryFromDb == null)
+            {
+                TempData["Error"] = "Silinecek kategori bulunamadı.";
+                return RedirectToAction("CategoryList");
+            }
+
+            _context.Categories.Remove(categoryFromDb); // Kategoriyi kaldır
+            _context.SaveChanges(); // Değişiklikleri kaydet
+
+            TempData["SuccessMessage"] = "Kategori başarıyla silindi!";
+            return RedirectToAction("CategoryList");
+        }
+
+
         public IActionResult Last()
         {
             ViewData["Title"] = "Son Dakika Haberleri";

@@ -1,0 +1,47 @@
+﻿@model habersite.Models.Category
+
+@{
+    ViewData["Title"] = $"Kategori Sil: {Model.Name}";
+}
+
+<div class="container mt-4">
+    <div class="card shadow border-danger">
+
+        <div class="card-header bg-danger text-white">
+            <h5 class="mb-0"><i class="fas fa-exclamation-triangle"></i> Silme İşlemi Onayı</h5>
+        </div>
+
+        <div class="card-body">
+            <h4 class="card-title text-danger">Bu kategoriyi silmek istediğinizden emin misiniz?</h4>
+            <p>Silme işlemi geri alınamaz. Kategoriye ait haberler de etkilenebilir.</p>
+
+            <dl class="row mt-4">
+                <dt class="col-sm-3">ID:</dt>
+                <dd class="col-sm-9">@Model.CategoryId</dd>
+
+                <dt class="col-sm-3">Ad:</dt>
+                <dd class="col-sm-9">@Model.Name</dd>
+
+                <dt class="col-sm-3">Açıklama:</dt>
+                <dd class="col-sm-9">@Model.Description</dd>
+
+                <dt class="col-sm-3">Durum:</dt>
+                <dd class="col-sm-9">@(Model.IsActive ? "Aktif" : "Pasif")</dd>
+            </dl>
+
+            <hr />
+
+            <form asp-action="DeleteCategory" method="post">
+                @* Gizli ID Alanı: Controller'a silinecek ID'yi gönderir *@
+                <input type="hidden" asp-for="CategoryId" />
+
+                <button type="submit" class="btn btn-danger me-2">
+                    <i class="fas fa-trash-alt"></i> Kategori Sil
+                </button>
+                <a asp-action="CategoryList" class="btn btn-secondary">
+                    İptal ve Listeye Dön
+                </a>
+            </form>
+        </div>
+    </div>
+</div>

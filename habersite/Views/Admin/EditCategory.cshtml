@@ -1,0 +1,64 @@
+﻿@model habersite.Models.Category
+
+@{
+    ViewData["Title"] = $"Kategori Düzenle: {Model.Name}";
+}
+
+<div class="container mt-4">
+    <div class="card shadow">
+
+        <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="fas fa-edit"></i> @ViewData["Title"]</h5>
+            <a asp-action="CategoryList" class="btn btn-dark btn-sm">
+                <i class="fas fa-list"></i> Listeye Dön
+            </a>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-8">
+                    <form asp-action="EditCategory" method="post">
+
+                        @* Gizli ID Alanı: Bu, hangi kaydı güncellediğimizi Controller'a bildirir *@
+                        <input type="hidden" asp-for="CategoryId" />
+
+                        @* Hata mesajlarını göstermek için *@
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        @* Kategori Adı Alanı *@
+                        <div class="form-group mb-3">
+                            <label asp-for="Name" class="form-label">Kategori Adı</label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        @* Açıklama Alanı *@
+                        <div class="form-group mb-3">
+                            <label asp-for="Description" class="form-label">Açıklama</label>
+                            <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        @* Aktif Durumu Alanı *@
+                        <div class="form-group form-check mb-3">
+                            <input class="form-check-input" asp-for="IsActive" />
+                            <label class="form-check-label" asp-for="IsActive">
+                                Aktif mi?
+                            </label>
+                        </div>
+
+                        @* Kaydet Butonu *@
+                        <div class="form-group pt-2">
+                            <button type="submit" class="btn btn-warning me-2">
+                                <i class="fas fa-sync-alt"></i> Güncelle
+                            </button>
+                            <a asp-action="CategoryList" class="btn btn-secondary">
+                                İptal
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
