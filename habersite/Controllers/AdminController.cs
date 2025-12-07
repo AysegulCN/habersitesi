@@ -6,13 +6,13 @@ using System.Linq; // LINQ ve Query işlemleri için
 namespace habersite.Controllers
 {
     public class AdminController : Controller
-    {  
+    {
         // 1. VERİTABANI BAĞLANTISI (Dependency Injection için gerekli alan)
         private readonly ApplicationDbContext _context;
 
         // 2. CONSTRUCTOR (Yapıcı Metot) ile Context'i enjekte etme
         // Bu, Context'i tanımanızı sağlayan kritik kısımdır.
-       
+
         public AdminController(ApplicationDbContext context)
         {
             _context = context;
@@ -43,11 +43,54 @@ namespace habersite.Controllers
 
         public IActionResult CreateNews()
         {
+            LoadCategoriesForViewBag();
             ViewData["Title"] = "Yeni Haber Ekle";
+            return View();
+        }
+        // --- HABER EKLEME (POST) ---
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CreateNews(News news, IFormFile? file) 
+        {
+            // Resim yükleme ve model geçerliliği kontrolü yapılır.
+            if (ModelState.IsValid)
+            {
+                // Resim Yükleme (Basitleştirilmiş)
+                if (file != null && file.Length > 0)
+                {
+                    // Gerçek projede: Resmi wwwroot'a kaydetme kodu buraya gelir.
+                    // Şimdilik sadece resim dosya adını alıp modele kaydedelim
+                    news.ImageId = file.FileName;
+                    news.ImageUrl = $"/images/{file.FileName}"; // Örnek yol
+                }
 
+                // Veritabanına Ekle
+                news.CreatedDate = DateTime.Now;
+                _context.News.Add(news);
+
+                // Değişiklikleri Kaydet
+                _context.SaveChanges();
+
+                TempData["SuccessMessage"] = "Haber başarıyla eklendi ve yayınlandı!";
+                return RedirectToAction("NewsList");
+            }
+
+            // Model geçerli değilse, kategorileri tekrar yükle ve formu geri gönder
+            LoadCategoriesForViewBag();
+            ViewData["Title"] = "Yeni Haber Ekle";
+            return View(news);
+        }
+
+
+
+
+
+
+        // --- Yardımcı Metot: Kategorileri Yükleme ---
+        private void LoadCategoriesForViewBag()
+        {
             try
             {
-                // Kategorileri getir - null kontrolü ekle
                 var categoriesList = _context.Categories
                     .Where(c => c.IsActive)
                     .ToList();
@@ -56,14 +99,12 @@ namespace habersite.Controllers
             }
             catch (Exception ex)
             {
-                // Hata durumunda boş liste
                 ViewBag.Categories = new List<Category>();
-                // Hata mesajını loglayabilirsiniz
                 Console.WriteLine($"Kategori getirme hatası: {ex.Message}");
             }
-
-            return View();
         }
+
+
         [HttpPost]
         [ValidateAntiForgeryToken] // Güvenlik için önerilir
         public IActionResult CreateCategory(Category category)
@@ -90,7 +131,7 @@ namespace habersite.Controllers
         public IActionResult CategoryList()
         {
             ViewData["Title"] = "Kategori Yönetimi";
-            var categories = _context.Categories.ToList(); 
+            var categories = _context.Categories.ToList();
             return View(categories);
         }
         public IActionResult EditCategory(int? id)
@@ -213,23 +254,26 @@ namespace habersite.Controllers
             ViewData["Title"] = "Teknoloji Haberleri";
             return View();
         }
+
+        [HttpGet]
         public IActionResult AddCategoriesNow()
         {
-            // Direkt SQL çalıştır
-              _context.Database.ExecuteSqlRaw(@"
-          IF NOT EXISTS (SELECT * FROM Categories WHERE Name = 'Ekonomi')
-          BEGIN
-            INSERT INTO Categories (Name, Description, IsActive) VALUES
-            ('Ekonomi', 'Ekonomi haberleri', 1),
-            ('Dünya', 'Dünya haberleri', 1),
-            ('Spor', 'Spor haberleri', 1),
-            ('Kadın', 'Kadın haberleri', 1),
-            ('Teknoloji', 'Teknoloji haberleri', 1);
-                  END
-                 ");
+            _context.Database.ExecuteSqlRaw(@"
+    IF NOT EXISTS (SELECT * FROM Categories WHERE Name = 'Ekonomi')
+    BEGIN
+        INSERT INTO Categories (Name, Description, IsActive, CreatedDate) VALUES
+        ('Ekonomi', 'Ekonomi haberleri', 1, GETDATE()),
+        ('Dünya', 'Dünya haberleri', 1, GETDATE()),
+        ('Spor', 'Spor haberleri', 1, GETDATE()),
+        ('Kadın', 'Kadın haberleri', 1, GETDATE()),
+        ('Teknoloji', 'Teknoloji haberleri', 1, GETDATE());
+    END
+    ");
 
             return RedirectToAction("CreateNews");
         }
+
+
 
 
         // --- SİSTEM & HESAP SAYFALARI ---
@@ -258,12 +302,12 @@ namespace habersite.Controllers
             return View("~/Views/Account/Page404.cshtml");
         }
 
-      
-       public IActionResult AddTestCategories()
+
+        public IActionResult AddTestCategories()
         {
             try
             {
-             
+
 
                 return RedirectToAction("CreateNews");
             }
@@ -273,6 +317,11 @@ namespace habersite.Controllers
                 return RedirectToAction("CreateNews");
             }
         }
+    
+   
+        
+
+
     }
 }
  

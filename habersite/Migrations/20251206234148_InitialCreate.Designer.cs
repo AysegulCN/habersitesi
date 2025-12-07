@@ -12,8 +12,8 @@ using habersite.Models;
 namespace habersite.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251206194600_FinalFix")]
-    partial class FinalFix
+    [Migration("20251206234148_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
