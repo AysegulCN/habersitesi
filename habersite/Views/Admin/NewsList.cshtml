@@ -20,7 +20,7 @@
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            
                             <th>Başlık</th>
                             <th>Kategori</th>
                             <th>Yayın Tarihi</th>
@@ -92,7 +92,7 @@
                                         lastDeletedRow.remove();
                                         lastDeletedRow = null;
                                     }); 
-                                }, 8000); // 8 saniye (8000 milisaniye)
+                                }, 5000); // 5 saniye (5000 milisaniye)
 
                             } else {
                                 alert('Hata: ' + result.message);
@@ -182,7 +182,7 @@
                                 setTimeout(function () {
                                     $('#undoNotification').fadeOut(300);
                                     lastDeletedRow = null;
-                                }, 8000); // 8 saniye
+                                }, 5000); // 5 saniye
 
                             } else {
                                 alert('Hata: ' + result.message);
@@ -214,4 +214,3 @@
             });
         });
     </script>
-}

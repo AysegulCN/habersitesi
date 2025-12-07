@@ -36,8 +36,15 @@ namespace habersite.Controllers
 
         // --- TEMEL YÖNETİM SAYFALARI ---
 
+        public void LoadAllCategoriesForLayout()
+        {
+            var categoriesList = _context.Categories.ToList();
+            ViewData["AllCategories"] = categoriesList;
+        }
+
         public IActionResult Index()
         {
+            LoadAllCategoriesForLayout();
             ViewData["Title"] = "Yönetim Paneli Ana Sayfa";
             return View();
         }
@@ -47,6 +54,7 @@ namespace habersite.Controllers
         {
             try
             {
+                LoadAllCategoriesForLayout();
                 var news = _context.News.Include(n => n.Category).ToList();
                 return View(news);
             }
@@ -59,6 +67,7 @@ namespace habersite.Controllers
         // --- HABER EKLEME (GET) ---
         public IActionResult CreateNews()
         {
+            LoadAllCategoriesForLayout();
             LoadCategoriesForViewBag();
             ViewData["Title"] = "Yeni Haber Ekle";
             return View();
@@ -93,6 +102,7 @@ namespace habersite.Controllers
         // --- HABER DÜZENLEME (GET) ---
         public IActionResult EditNews(int? id)
         {
+            LoadAllCategoriesForLayout();
             if (id == null || id == 0) return NotFound();
             var newsItem = _context.News.Find(id);
             if (newsItem == null) return NotFound();
@@ -146,14 +156,19 @@ namespace habersite.Controllers
 
         public IActionResult CategoryList()
         {
+            LoadAllCategoriesForLayout();
             ViewData["Title"] = "Kategori Yönetimi";
             var categories = _context.Categories.ToList();
             return View(categories);
         }
 
+        
+
+
         // --- KATEGORİ EKLEME (GET) ---
         public IActionResult CreateCategory()
         {
+            LoadAllCategoriesForLayout();
             ViewData["Title"] = "Yeni Kategori Ekle";
             return View(new Category());
         }
@@ -179,6 +194,7 @@ namespace habersite.Controllers
 
         public IActionResult EditCategory(int? id)
         {
+            LoadAllCategoriesForLayout();
             if (id == null || id == 0) return NotFound();
             var categoryFromDb = _context.Categories.Find(id);
             if (categoryFromDb == null) return NotFound();
@@ -192,15 +208,13 @@ namespace habersite.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Categories.Update(category);
-                _context.SaveChanges();
-                TempData["SuccessMessage"] = "Kategori başarıyla güncellendi!";
                 return RedirectToAction("CategoryList");
             }
+
+            LoadAllCategoriesForLayout();
             ViewData["Title"] = $"Kategori Düzenle: {category.Name}";
             return View(category);
         }
-
         public IActionResult DeleteCategory(int? id)
         {
             if (id == null || id == 0) return NotFound();
@@ -209,22 +223,24 @@ namespace habersite.Controllers
             ViewData["Title"] = $"Kategori Sil: {categoryFromDb.Name}";
             return View(categoryFromDb);
         }
-
+        // --- KATEGORİ SİLME (POST - AJAX Uyumlu) ---
         [HttpPost, ActionName("DeleteCategory")]
-        [ValidateAntiForgeryToken]
         public IActionResult DeleteCategoryConfirmed(int id)
         {
             var categoryFromDb = _context.Categories.Find(id);
+
             if (categoryFromDb == null)
             {
-                TempData["Error"] = "Silinecek kategori bulunamadı.";
-                return RedirectToAction("CategoryList");
+                // AJAX'a hata mesajı gönder
+                return Json(new { success = false, message = "Silinecek kategori bulunamadı." });
             }
 
+            // Haberlerin silinmesi gereken ek mantık buraya gelebilir.
             _context.Categories.Remove(categoryFromDb);
             _context.SaveChanges();
-            TempData["SuccessMessage"] = "Kategori başarıyla silindi!";
-            return RedirectToAction("CategoryList");
+
+            // Başarılı JSON yanıtı gönder
+            return Json(new { success = true, message = "Kategori başarıyla silindi." });
         }
 
 
@@ -257,6 +273,7 @@ namespace habersite.Controllers
 
         public IActionResult Last()
         {
+            LoadAllCategoriesForLayout();
             ViewData["Title"] = "Son Dakika Haberleri";
 
             // Modelde IsBreakingNews özelliği olana kadar, NewsList mantığını kullanıyoruz.
@@ -275,6 +292,7 @@ namespace habersite.Controllers
 
         public IActionResult Raporlar()
         {
+            LoadAllCategoriesForLayout();
             ViewData["Title"] = "Site İstatistikleri ve Raporlar";
             return View();
         }
@@ -299,17 +317,17 @@ namespace habersite.Controllers
         }
 
 
-        public IActionResult Ekonomi() { ViewData["Title"] = "Ekonomi Haberleri"; return View(); }
-        public IActionResult Dunya() { ViewData["Title"] = "Dünya Haberleri"; return View(); }
-        public IActionResult Spor() { ViewData["Title"] = "Spor Haberleri"; return View(); }
-        public IActionResult Kadin() { ViewData["Title"] = "Kadın Haberleri"; return View(); }
-        public IActionResult Teknoloji() { ViewData["Title"] = "Teknoloji Haberleri"; return View(); }
+        public IActionResult Ekonomi() { LoadAllCategoriesForLayout(); ViewData["Title"] = "Ekonomi Haberleri"; return View(); }
+        public IActionResult Dunya() { LoadAllCategoriesForLayout(); ViewData["Title"] = "Dünya Haberleri"; return View(); }
+        public IActionResult Spor() { LoadAllCategoriesForLayout();  ViewData["Title"] = "Spor Haberleri"; return View(); }
+        public IActionResult Kadin() { LoadAllCategoriesForLayout(); ViewData["Title"] = "Kadın Haberleri"; return View(); }
+        public IActionResult Teknoloji() { LoadAllCategoriesForLayout(); ViewData["Title"] = "Teknoloji Haberleri"; return View(); }
 
 
-        public IActionResult Login() { ViewData["Title"] = "Giriş Yap"; return View("~/Views/Account/Login.cshtml"); }
-        public IActionResult Register() { ViewData["Title"] = "Kayıt Ol"; return View("~/Views/Account/Register.cshtml"); }
-        public IActionResult ForgotPassword() { ViewData["Title"] = "Şifremi Unuttum"; return View("~/Views/Account/ForgotPassword.cshtml"); }
-        public IActionResult Page404() { ViewData["Title"] = "Sayfa Bulunamadı"; return View("~/Views/Account/Page404.cshtml"); }
+        public IActionResult Login() { LoadAllCategoriesForLayout(); ViewData["Title"] = "Giriş Yap"; return View("~/Views/Account/Login.cshtml"); }
+        public IActionResult Register() { LoadAllCategoriesForLayout(); ViewData["Title"] = "Kayıt Ol"; return View("~/Views/Account/Register.cshtml"); }
+        public IActionResult ForgotPassword() { LoadAllCategoriesForLayout(); ViewData["Title"] = "Şifremi Unuttum"; return View("~/Views/Account/ForgotPassword.cshtml"); }
+        public IActionResult Page404() { LoadAllCategoriesForLayout(); ViewData["Title"] = "Sayfa Bulunamadı"; return View("~/Views/Account/Page404.cshtml"); }
 
     }
 }

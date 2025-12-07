@@ -1,45 +1,128 @@
-﻿@model List<habersite.Models.Category>
+﻿@model List<habersite.Models.Category>  
 @{
     ViewData["Title"] = "Kategori Yönetimi";
 }
 
-<div class="container mt-4">
-    <h2>Kategori Yönetimi</h2>
+<div class="container-fluid">
 
+    <div class="card shadow mb-4">
 
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Ad</th>
-                <th>Açıklama</th>
-                <th>Durum</th>
-                <th>İşlemler</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var category in Model)
+        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+            <h6 class="m-0 font-weight-bold text-primary">Kategori Listesi</h6>
+            <a asp-action="CreateCategory" class="btn btn-success btn-sm">
+                <i class="fas fa-plus"></i> Yeni Kategori Ekle
+            </a>
+        </div>
+
+        <div class="card-body">
+
+            @if (TempData["SuccessMessage"] != null)
             {
-                <tr>
-                    <td>@category.CategoryId</td>
-                    <td>@category.Name</td>
-                    <td>@category.Description</td>
-                    <td>
-                        @if (category.IsActive)
-                        {
-                            <span class="badge bg-success">Aktif</span>
-                        }
-                        else
-                        {
-                            <span class="badge bg-danger">Pasif</span>
-                        }
-                    </td>
-                    <td>
-                        <a href="#" class="btn btn-warning btn-sm">Düzenle</a>
-                        <a href="#" class="btn btn-danger btn-sm">Sil</a>
-                    </td>
-                </tr>
+                <div class="alert alert-success">@TempData["SuccessMessage"]</div>
             }
-        </tbody>
-    </table>
+
+            <div class="table-responsive">
+                <table class="table table-bordered" id="categoryTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Ad</th>
+                            <th>Açıklama</th>
+                            <th>Durum</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var category in Model)
+                        {
+                            <tr id="category_row_@category.CategoryId">
+                                <td>@category.CategoryId</td>
+                                <td>@category.Name</td>
+                                <td>@category.Description</td>
+                                <td>
+                                    <span class="badge @(category.IsActive ? "bg-success" : "bg-danger")">
+                                        @(category.IsActive ? "Aktif" : "Pasif")
+                                    </span>
+                                </td>
+                                <td>
+                                    <a asp-action="EditCategory" asp-route-id="@category.CategoryId" class="btn btn-warning btn-sm">Düzenle</a>
+
+                                    <button class="btn btn-danger btn-sm delete-category-btn" data-id="@category.CategoryId">Sil (AJAX)</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
+
+@section Scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Geri Alma (Undo) bildirimi sadece bu View için eklendi
+        $('body').append('<div id="undoNotification" style="display:none; position:fixed; bottom:20px; right:20px; background:#28a745; color:white; padding:15px; border-radius:8px; z-index:10000;">' +
+                            'Haber Silindi. <a href="#" id="undoButton" class="btn btn-sm btn-light ms-2">GERİ AL (5 SANİYE)</a>' +
+                            '</div>');
+            var lastDeletedCategoryRow = null;
+
+            // Kategori Silme Butonuna Tıklama Olayı
+            $('.delete-category-btn').on('click', function () {
+                var categoryId = $(this).data('id');
+                var $row = $('#category_row_' + categoryId);
+
+                if (confirm('Bu kategoriyi silmek istediğinizden emin misiniz? (AJAX İşlemi)')) {
+
+                    $.ajax({
+                        // Burası DeleteCategoryConfirmed (POST) metodunuzu çağırır
+                        url: '/Admin/DeleteCategory/' + categoryId,
+                        type: 'POST',
+                        success: function (result) {
+                            // Controller'dan JSON dönmelidir (Success: true/false)
+                            if (result.success || result.success == undefined) { // DeleteCategoryConfirmed şu an redirect yaptığı için undefined kontrolü de ekledik
+
+                                // 1. Satırı sayfadan kaldır
+                                lastDeletedCategoryRow = $row.detach();
+
+                                // 2. Geri Alma Bildirimini göster
+                                $('#categoryUndoNotification').fadeIn(300);
+
+                                // 3. 5 saniye sonra bildirimi kaldır
+                                setTimeout(function () {
+                                    $('#categoryUndoNotification').fadeOut(300);
+                                    lastDeletedCategoryRow = null;
+                                }, 5000); // 5 saniye
+
+                            } else {
+                                alert('Hata: ' + result.message);
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            alert('Sunucu hatası oluştu. Silme işlemi tamamlanamadı.');
+                        }
+                    });
+                }
+            });
+
+            // Geri Al Butonuna Tıklama Olayı
+            $('#undoCategoryButton').on('click', function (e) {
+                e.preventDefault();
+
+                if (lastDeletedCategoryRow) {
+                    // Sayfaya geri ekle
+                    $('tbody').append(lastDeletedCategoryRow);
+                    lastDeletedCategoryRow = null;
+
+                    // Bildirimi gizle
+                    $('#categoryUndoNotification').fadeOut(300);
+
+                    // NOT: Haberler'deki gibi RestoreCategory metodu eklenmelidir.
+                    // Şu an sadece görsel geri alma yapılmıştır.
+                }
+            });
+        });
+    </script>
+}
