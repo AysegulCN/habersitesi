@@ -29,5 +29,7 @@ namespace habersite.Models
         // Navigation Property
         [ForeignKey("CategoryId")]
         public Category? Category { get; set; }
+
+        public string? Slug { get; set; } // URL dostu, benzersiz metin
     }
 }

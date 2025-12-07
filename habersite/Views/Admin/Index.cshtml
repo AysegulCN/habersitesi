@@ -1,12 +1,88 @@
 ﻿@{
-    ViewData["Title"] = "Admin Paneli";
+    ViewData["Title"] = "Yönetim Paneli Ana Sayfa";
 }
 
-<h2>Admin Yönetim Paneli</h2>
+<div class="container-fluid">
 
-<p>Buradan haberleri ve kategorileri yönetebilirsiniz.</p>
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Yönetim Paneli - Hoş Geldiniz</h1>
+    </div>
 
-<ul>
-    <li><a href="/Admin/CategoryList">Kategoriler</a></li>
-    <li><a href="/Admin/Last">Haberler</a></li>
-</ul>
+    <div class="row">
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Toplam Haber Sayısı
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">45 (Simülasyon)</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-newspaper fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Aktif Kategori Sayısı
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">5 (Simülasyon)</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-folder fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Yeni Yorumlar
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">12 (Simülasyon)</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-comments fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Yönetim Kılavuzu</h6>
+                </div>
+                <div class="card-body">
+                    <p>
+                        Bu panel, haber portalınızın tüm içerik yönetimini (CRUD) yapmak üzere tasarlanmıştır. Lütfen soldaki menüyü kullanarak işlemlere başlayın:
+                    </p>
+                    <ul>
+                        <li><i class="fas fa-list-alt text-primary"></i> **Haber İşlemleri:** Yeni haber ekleyebilir, mevcut haberleri düzenleyebilir veya **AJAX Geri Alma** özelliği ile silebilirsiniz.</li>
+                        <li><i class="fas fa-folder text-primary"></i> **Kategori Yönetimi:** Yeni kategoriler ekleyin; bunlar menüde **otomatik olarak** görünecektir.</li>
+                        <li><i class="fas fa-chart-area text-primary"></i> **Raporlar:** İstatistikleri buradan inceleyebilirsiniz.</li>
+                    </ul>
+                    <a href="/Admin/CreateNews" class="btn btn-primary mt-3">Hemen Haber Ekle <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

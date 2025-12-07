@@ -1,4 +1,4 @@
-﻿@model List<habersite.Models.Category>  
+﻿@model List<habersite.Models.Category>
 @{
     ViewData["Title"] = "Kategori Yönetimi";
 }
@@ -25,7 +25,7 @@
                 <table class="table table-bordered" id="categoryTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>Sıra No</th>
                             <th>Ad</th>
                             <th>Açıklama</th>
                             <th>Durum</th>
@@ -33,10 +33,11 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @{ int i = 1; } {{-- Sayaç 1'den başlasın --}}
                         @foreach (var category in Model)
                         {
                             <tr id="category_row_@category.CategoryId">
-                                <td>@category.CategoryId</td>
+                                <td>@i</td>
                                 <td>@category.Name</td>
                                 <td>@category.Description</td>
                                 <td>
@@ -63,10 +64,11 @@
 
     <script>
         $(document).ready(function () {
-            // Geri Alma (Undo) bildirimi sadece bu View için eklendi
-        $('body').append('<div id="undoNotification" style="display:none; position:fixed; bottom:20px; right:20px; background:#28a745; color:white; padding:15px; border-radius:8px; z-index:10000;">' +
-                            'Haber Silindi. <a href="#" id="undoButton" class="btn btn-sm btn-light ms-2">GERİ AL (5 SANİYE)</a>' +
-                            '</div>');
+            // Geri Alma (Undo) bildirimi sadece bu View için eklendi. ID'si "categoryUndoNotification" olmalı.
+            $('body').append('<div id="categoryUndoNotification" style="display:none; position:fixed; bottom:20px; right:20px; background:#28a745; color:white; padding:15px; border-radius:8px; z-index:10000;">' +
+                             'Kategori Silindi. <a href="#" id="undoCategoryButton" class="btn btn-sm btn-light ms-2">GERİ AL (5 SANİYE)</a>' +
+                             '</div>');
+
             var lastDeletedCategoryRow = null;
 
             // Kategori Silme Butonuna Tıklama Olayı
@@ -77,20 +79,17 @@
                 if (confirm('Bu kategoriyi silmek istediğinizden emin misiniz? (AJAX İşlemi)')) {
 
                     $.ajax({
-                        // Burası DeleteCategoryConfirmed (POST) metodunuzu çağırır
                         url: '/Admin/DeleteCategory/' + categoryId,
                         type: 'POST',
                         success: function (result) {
-                            // Controller'dan JSON dönmelidir (Success: true/false)
-                            if (result.success || result.success == undefined) { // DeleteCategoryConfirmed şu an redirect yaptığı için undefined kontrolü de ekledik
+                            if (result.success) { // Controller'ın JSON: {success: true} döndürdüğünü varsayarız
 
-                                // 1. Satırı sayfadan kaldır
                                 lastDeletedCategoryRow = $row.detach();
 
-                                // 2. Geri Alma Bildirimini göster
+                                // Geri Alma Bildirimini göster
                                 $('#categoryUndoNotification').fadeIn(300);
 
-                                // 3. 5 saniye sonra bildirimi kaldır
+                                // 5 saniye sonra bildirimi kaldır
                                 setTimeout(function () {
                                     $('#categoryUndoNotification').fadeOut(300);
                                     lastDeletedCategoryRow = null;
@@ -119,8 +118,7 @@
                     // Bildirimi gizle
                     $('#categoryUndoNotification').fadeOut(300);
 
-                    // NOT: Haberler'deki gibi RestoreCategory metodu eklenmelidir.
-                    // Şu an sadece görsel geri alma yapılmıştır.
+                    // NOT: Veritabanı RestoreCategory metodu çağrılmalıdır
                 }
             });
         });

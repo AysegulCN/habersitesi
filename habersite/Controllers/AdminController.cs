@@ -34,6 +34,20 @@ namespace habersite.Controllers
             }
         }
 
+
+        // --- YARDIMCI METOT: Başlıktan URL Dostu Slug Oluşturma ---
+        public static string CreateSlug(string title)
+        {
+            string slug = title.ToLower();
+            slug = slug.Replace("ş", "s").Replace("ı", "i").Replace("ğ", "g").Replace("ü", "u").Replace("ö", "o").Replace("ç", "c");
+
+            slug = System.Text.RegularExpressions.Regex.Replace(slug, @"[^a-z0-9\s-]", ""); 
+            slug = System.Text.RegularExpressions.Regex.Replace(slug, @"\s+", " ").Trim(); 
+            slug = System.Text.RegularExpressions.Regex.Replace(slug, @"\s", "-"); 
+
+            return slug;
+        }
+
         // --- TEMEL YÖNETİM SAYFALARI ---
 
         public void LoadAllCategoriesForLayout()
@@ -80,12 +94,17 @@ namespace habersite.Controllers
         {
             if (ModelState.IsValid)
             {
+                // 1. Resim İşlemleri
                 if (file != null && file.Length > 0)
                 {
                     news.ImageId = file.FileName;
                     news.ImageUrl = $"/images/{file.FileName}";
                 }
 
+                // 2. KRİTİK ADIM: Slug oluşturuluyor ve Model'e atanıyor
+                news.Slug = CreateSlug(news.Title);
+
+                // 3. Veritabanına Ekleme
                 news.CreatedDate = DateTime.Now;
                 _context.News.Add(news);
                 _context.SaveChanges();
@@ -94,6 +113,8 @@ namespace habersite.Controllers
                 return RedirectToAction("NewsList");
             }
 
+            // Model geçersizse menüyü ve kategorileri tekrar yükle
+            LoadAllCategoriesForLayout(); // Layout için dinamik menü yüklensin
             LoadCategoriesForViewBag();
             ViewData["Title"] = "Yeni Haber Ekle";
             return View(news);

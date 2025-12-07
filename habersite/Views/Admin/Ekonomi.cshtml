@@ -1,9 +1,43 @@
-﻿@{
-    Layout = "_Layout";
-    ViewData["Title"] = "Ekonomi Haberleri";
+﻿@model List<habersite.Models.News>
+@{
+    // Dinamik Title kullanılıyor: Örn: Ekonomi Haberleri
+    ViewData["Title"] = ViewData["Title"];
 }
 
 <div class="container-fluid">
-    <h1 class="h3 mb-4 text-gray-800">@ViewData["Title"] Yönetim Sayfası</h1>
-    <p>Burada ekonomi kategorisine ait haberler listelenecek.</p>
+
+    <h1 class="h3 mb-4 text-gray-800">@ViewData["Title"] Yönetimi</h1>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Bu Kategoriye Ait Haberler</h6>
+        </div>
+        <div class="card-body">
+
+            <div class="alert alert-info" role="alert">
+                <strong>NOT:</strong> Bu sayfa, İLERİ aşamada sadece '@ViewData["Title"]' kategorisine ait haberleri filtreleyerek gösterecektir.
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Başlık</th>
+                            <th>Yayın Tarihi</th>
+                            <th>Durum</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @* Şimdilik burası boş kalacak, çünkü Controller metotları henüz filtreleme yapmıyor. *@
+                        <tr>
+                            <td colspan="5" class="text-center text-muted">Bu kategoriye ait haber bulunmamaktadır.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
 </div>
