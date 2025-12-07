@@ -18,7 +18,6 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-12">
-                    {{-- Formu genişlettik --}}
 
                     @* Başarı veya Hata Mesajları *@
                     @if (TempData["SuccessMessage"] != null)
@@ -40,31 +39,25 @@
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                         <div class="row">
-                            {{-- SOL SÜTUN --}}
                             <div class="col-md-8">
 
-                                {{-- Haber Başlığı --}}
                                 <div class="mb-3">
                                     <label asp-for="Title" class="form-label">Haber Başlığı</label>
                                     <input asp-for="Title" class="form-control" placeholder="Haberin ana başlığını girin" required />
                                     <span asp-validation-for="Title" class="text-danger"></span>
                                 </div>
 
-                                {{-- Haber İçeriği (Content) --}}
                                 <div class="mb-3">
                                     <label asp-for="Content" class="form-label">Haber İçeriği (TinyMCE Editörü)</label>
-                                    {{-- KRİTİK DÜZELTME: TinyMCE'nin bağlanacağı ID eklendi --}}
                                     <textarea asp-for="Content" id="Content" class="form-control" rows="15" placeholder="Haberin tüm detayları"></textarea>
                                     <span asp-validation-for="Content" class="text-danger"></span>
                                 </div>
                             </div>
 
-                            {{-- SAĞ SÜTUN (Ayarlar) --}}
                             <div class="col-md-4">
                                 <div class="card bg-light p-3">
                                     <h6 class="card-title">Haber Ayarları</h6>
 
-                                    {{-- Kategori Seçimi --}}
                                     <div class="mb-3">
                                         <label asp-for="CategoryId" class="form-label">Kategori Seçin</label>
                                         @if (categories.Any())
@@ -87,21 +80,18 @@
                                         <span asp-validation-for="CategoryId" class="text-danger"></span>
                                     </div>
 
-                                    {{-- Kısa Açıklama / Özellik --}}
                                     <div class="mb-3">
                                         <label asp-for="Description" class="form-label">Kısa Açıklama (Spot)</label>
                                         <textarea asp-for="Description" class="form-control" rows="2" placeholder="Haberin özetini girin"></textarea>
                                         <span asp-validation-for="Description" class="text-danger"></span>
                                     </div>
 
-                                    {{-- Resim Yükleme --}}
                                     <div class="mb-3">
                                         <label class="form-label">Resim Yükle</label>
                                         <input type="file" name="file" class="form-control" />
                                         <small class="text-muted">Ana görsel (PNG, JPG).</small>
                                     </div>
 
-                                    {{-- Yayın Durumu --}}
                                     <div class="form-group form-check mb-3">
                                         <input class="form-check-input" asp-for="IsActive" />
                                         <label class="form-check-label" asp-for="IsActive">
@@ -113,7 +103,6 @@
                             </div>
                         </div>
 
-                        {{-- Kaydet Butonları --}}
                         <div class="form-group pt-4 text-center">
                             <button type="submit" class="btn btn-primary me-2 btn-lg">
                                 <i class="fas fa-save"></i> Haberi Kaydet ve Yayınla

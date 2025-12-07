@@ -16,7 +16,6 @@
     }
 
     <div class="card shadow mb-4">
-        {{-- Ana Card Başlangıcı --}}
 
         <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
             <h5 class="mb-0">@ViewData["Title"]</h5>
@@ -26,7 +25,6 @@
         </div>
 
         <div class="card-body">
-            {{-- Card Gövdesi: Tabloyu içerir --}}
             <div class="table-responsive">
                 <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
                     <thead>
@@ -42,7 +40,7 @@
                         @foreach (var category in Model)
                         {
                             <tr>
-                                <td>@category.CategoryId</td> {{-- Model Fix sonrası doğru kullanım --}}
+                                <td>@category.CategoryId</td> 
                                 <td>@category.Name</td>
                                 <td class="d-none d-md-table-cell">@category.Description</td>
                                 <td>
@@ -68,6 +66,6 @@
                     </tbody>
                 </table>
             </div>
-        </div> {{-- Card Gövdesi Bitişi --}}
-    </div> {{-- Ana Card Bitişi --}}
+        </div> 
+    </div> 
 </div>

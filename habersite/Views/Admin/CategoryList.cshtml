@@ -6,7 +6,6 @@
 <div class="container mt-4">
     <h2>Kategori Yönetimi</h2>
 
-    <a href="@Url.Action("CreateCategory")" class="btn btn-success mb-3">Yeni Kategori Ekle</a>
 
     <table class="table table-bordered">
         <thead>
@@ -22,7 +21,6 @@
             @foreach (var category in Model)
             {
                 <tr>
-                    {{-- Sadece CategoryId kullanıldı --}}
                     <td>@category.CategoryId</td>
                     <td>@category.Name</td>
                     <td>@category.Description</td>

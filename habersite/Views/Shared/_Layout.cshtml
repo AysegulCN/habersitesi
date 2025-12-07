@@ -24,16 +24,17 @@
 <body id="page-top">
 
     <div id="wrapper">
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
-            <div class="sidebar-brand-icon rotate-n-15">
-                <i class="fas fa-star"></i>
-            </div>
-            <div class="sidebar-brand-text mx-3">YILDIZ HABER</div>
-        </a>
+
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
-           
-            <li class="nav-item-divider"><hr class="sidebar-divider my-0"></li>
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="@Url.Action("Index", "Admin")">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">YILDIZ HABER</div>
+            </a>
+
+            <hr class="sidebar-divider my-0">
 
             <li class="nav-item active">
                 <a class="nav-link" asp-controller="Admin" asp-action="Index">
@@ -42,89 +43,85 @@
                 </a>
             </li>
 
-            <li class="nav-item-divider"><hr class="sidebar-divider"></li>
+            <hr class="sidebar-divider">
 
-
-
-            <li class="nav-item">
-                <a class="nav-link" asp-controller="Admin" asp-action="Last">
-                    <i class="fas fa-fw fa-chart-area"></i>
-                    <span>SON DAKİKA</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
-                   aria-expanded="true" aria-controls="collapseUtilities">
-                    <i class="fas fa-fw fa-folder"></i>
-                    <span>KATEGORİLER</span>
-                </a>
-                <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
-                     data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Haber Kategorileri:</h6>
-
-                        @* AYRI ACTION METOTLARINA DİNAMİK YÖNLENDİRME *@
-                        <a class="collapse-item" asp-controller="Admin" asp-action="Ekonomi">Ekonomi</a>
-                        <a class="collapse-item" asp-controller="Admin" asp-action="Dunya">Dünya</a>
-                        <a class="collapse-item" asp-controller="Admin" asp-action="Spor">Spor</a>
-                        <a class="collapse-item" asp-controller="Admin" asp-action="Kadin">Kadın</a>
-                        <a class="collapse-item" asp-controller="Admin" asp-action="Teknoloji">Teknoloji</a>
-
-                        <div class="collapse-divider"></div>
-
-                        <a class="collapse-item" asp-controller="Admin" asp-action="CategoryList">Kategori Yönetimi (Ekle/Sil)</a>
-                    </div>
-                </div>
-            </li>
-            <li class="nav-item-divider"><hr class="sidebar-divider"></li>
-            <li class="nav-item-heading"><div class="sidebar-heading">Eklentiler</div></li>
-
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
-                   aria-expanded="true" aria-controls="collapsePages">
-                    <i class="fas fa-fw fa-wrench"></i>
-                    <span>Sistem & Sayfalar</span>
-                </a>
-                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-
-                        <h6 class="collapse-header">HESAP İŞLEMLERİ:</h6> 
-
-                        <a class="collapse-item" asp-controller="Admin" asp-action="Login">Giriş Yap</a>
-                        <a class="collapse-item" asp-controller="Admin" asp-action="Register">Kayıt Ol</a>
-                        <a class="collapse-item" asp-controller="Admin" asp-action="ForgotPassword">Şifremi Unuttum</a>
-
-                        <div class="collapse-divider"></div>
-
-                        <h6 class="collapse-header">SİSTEM SAYFALARI:</h6>
-
-                        <a class="collapse-item" asp-controller="Admin" asp-action="Page404">404 Hata Sayfası</a>
-                        <a class="collapse-item" asp-controller="Admin" asp-action="Blank">Boş Sayfa (Şablon)</a> @* Opsiyonel boş sayfa eklendi *@
-
-                    </div>
-                </div>
-            </li>
-
-            @* Views/Shared/_Layout.cshtml dosyasına ekleyin *@
+            <div class="sidebar-heading">
+                HABER İŞLEMLERİ
+            </div>
 
             <li class="nav-item">
                 <a class="nav-link" asp-controller="Admin" asp-action="CreateNews">
-                    <i class="fas fa-fw fa-pen"></i> @* Kalem ikonu uygun olur *@
+                    <i class="fas fa-pen"></i>
                     <span>Yeni Haber Ekle</span>
                 </a>
             </li>
 
             <li class="nav-item">
                 <a class="nav-link" asp-controller="Admin" asp-action="NewsList">
-                    <i class="fas fa-fw fa-list"></i>
-                    <span>Haber Listesi</span> @* NewsList linkiniz *@
+                    <i class="fas fa-list-alt"></i>
+                    <span>Haber Listesi</span>
                 </a>
             </li>
+
             <li class="nav-item">
-                <a class="nav-link" asp-controller="Admin" asp-action="Raporlar">
-                    <i class="fas fa-fw fa-chart-area"></i>
-                    <span>Raporlar</span>
+                <a class="nav-link" asp-controller="Admin" asp-action="Last">
+                    <i class="fas fa-clock"></i>
+                    <span>SON DAKİKA</span>
                 </a>
+            </li>
+
+            <hr class="sidebar-divider">
+
+            <div class="sidebar-heading">
+                KATEGORİ YÖNETİMİ
+            </div>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
+                   aria-expanded="true" aria-controls="collapseUtilities">
+                    <i class="fas fa-folder"></i>
+                    <span>Kategoriler</span>
+                </a>
+                <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Yönetim:</h6>
+                        <a class="collapse-item" asp-controller="Admin" asp-action="CategoryList">Kategori Listesi</a>
+                        <a class="collapse-item" asp-controller="Admin" asp-action="CreateCategory">Yeni Kategori Ekle</a>
+                        <div class="collapse-divider"></div>
+                        <h6 class="collapse-header">Haber Kategorileri:</h6>
+                        <a class="collapse-item" asp-controller="Admin" asp-action="Ekonomi">Ekonomi</a>
+                        <a class="collapse-item" asp-controller="Admin" asp-action="Dunya">Dünya</a>
+                        <a class="collapse-item" asp-controller="Admin" asp-action="Spor">Spor</a>
+                        <a class="collapse-item" asp-controller="Admin" asp-action="Kadin">Kadın</a>
+                        <a class="collapse-item" asp-controller="Admin" asp-action="Teknoloji">Teknoloji</a>
+                    </div>
+                </div>
+            </li>
+
+            <hr class="sidebar-divider">
+
+            <div class="sidebar-heading">
+                SİSTEM & RAPORLAR
+            </div>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+                   aria-expanded="true" aria-controls="collapsePages">
+                    <i class="fas fa-wrench"></i>
+                    <span>Sistem & Sayfalar</span>
+                </a>
+                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">HESAP İŞLEMLERİ:</h6>
+                        <a class="collapse-item" asp-controller="Admin" asp-action="Login">Giriş Yap</a>
+                        <a class="collapse-item" asp-controller="Admin" asp-action="Register">Kayıt Ol</a>
+                        <a class="collapse-item" asp-controller="Admin" asp-action="ForgotPassword">Şifre Unutma</a>
+                        <div class="collapse-divider"></div>
+                        <h6 class="collapse-header">SİSTEM SAYFALARI:</h6>
+                        <a class="collapse-item" asp-controller="Admin" asp-action="Raporlar">Raporlar</a>
+                        <a class="collapse-item" asp-controller="Admin" asp-action="Page404">404 Hata</a>
+                    </div>
+                </div>
             </li>
 
             <li class="nav-item">
@@ -134,17 +131,13 @@
                 </a>
             </li>
 
+            <hr class="sidebar-divider d-none d-md-block">
 
-            <li class="nav-item-divider"><hr class="sidebar-divider d-none d-md-block"></li>
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
 
-            <li class="nav-item-toggler"><div class="text-center d-none d-md-inline"><button class="rounded-circle border-0"
-                id="sidebarToggle"></button></div></li>
-
-            <li class="nav-item-card"><div class="sidebar-card d-none d-lg-flex">
-                <img class="sidebar-card-illustration mb-2" src="~/img/undraw_rocket.svg" alt="...">
-                <p class="text-center mb-2"><strong>SB Admin Pro</strong> is packed with premium features, components, and more!</p>
-                <a class="btn btn-success btn-sm" href="https://startbootstrap.com/theme/sb-admin-pro">Upgrade to Pro!</a></div>
-            </li>
+            
 
         </ul>
         <div id="content-wrapper" class="d-flex flex-column">
@@ -178,9 +171,8 @@
                 </nav>
                 <div class="container-fluid">
 
-
-                    
-                    *@RenderBody()*
+                    @* RenderBody() artık çalışır *@
+                    @RenderBody()
 
                 </div>
             </div>
@@ -215,6 +207,7 @@
             </div>
         </div>
     </div>
+
     <script src="~/vendor/jquery/jquery.min.js"></script>
     <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="~/vendor/jquery-easing/jquery.easing.min.js"></script>
@@ -222,15 +215,17 @@
 
 
     @await RenderSectionAsync("Scripts", required: false)
+
     <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 
-<script>
-    tinymce.init({
-        selector: 'textarea#Content', // news modelindeki Content alanını hedef al
-        plugins: 'advlist autolink lists link image charmap print preview anchor',
-        toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | image link',
-        height: 400
-    });
-</script>
+    <script>
+        tinymce.init({
+            selector: 'textarea#Content', // news modelindeki Content alanını hedef al
+            plugins: 'advlist autolink lists link image charmap print preview anchor',
+            toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | image link',
+            height: 400
+        });
+    </script>
 </body>
 </html>
+
