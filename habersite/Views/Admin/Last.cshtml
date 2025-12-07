@@ -1,9 +1,62 @@
-﻿@{
-    Layout = "_Layout";
-    ViewData["Title"] = "Son Dakilka  Haberleri";
+﻿@model List<habersite.Models.News>
+@{
+    ViewData["Title"] = "Son Dakika Haberleri Yönetimi";
 }
 
 <div class="container-fluid">
-    <h1 class="h3 mb-4 text-gray-800">@ViewData["Title"] Yönetim Sayfası</h1>
-    <p>Burada son dakika kategorisine ait haberler listelenecek.</p>
+
+    <h1 class="h3 mb-4 text-gray-800">Son Dakika Haberleri Yönetimi</h1>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Yayınlanan En Acil Haberler</h6>
+        </div>
+        <div class="card-body">
+
+            <div class="alert alert-info" role="alert">
+                <strong>NOT:</strong> Bu sayfa, modelinizdeki özel bir alana (örneğin, <code>IsBreakingNews</code>) göre filtrelenmiş haberleri listelemek için tasarlanmıştır. Şimdilik tüm aktif haberler gösterilecektir.
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered" id="lastNewsTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Başlık</th>
+                            <th>Kategori</th>
+                            <th>Yayın Tarihi</th>
+                            <th>Durum</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @* TODO: Burada _context.News.Where(n => n.IsBreakingNews).ToList() 
+                           gibi bir sorgu ile sadece Son Dakika haberleri gösterilecektir.
+                        *@
+
+                        @* Şu an model boş olduğu için burası boş gelecektir.
+                           Ancak NewsList'teki mantığı buraya taşıyabiliriz. 
+                        *@
+                        <tr>
+                            <td colspan="6" class="text-center text-muted">Henüz Son Dakika haberi bulunmamaktadır.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-success">Son Dakika Tanımlama</h6>
+                </div>
+                <div class="card-body">
+                    Bu alanda, hangi haberlerin ana sayfada "Son Dakika" etiketiyle görüneceği belirlenebilir. Bu işlevsellik, projenin İLERİ (Final) aşamasında Model Güncellemesi gerektirir.
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

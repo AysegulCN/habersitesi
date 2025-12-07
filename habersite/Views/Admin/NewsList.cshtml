@@ -3,64 +3,215 @@
     ViewData["Title"] = "Haber Listesi";
 }
 
-<div class="container mt-4">
-    <h2>Haber Listesi</h2>
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+            <h6 class="m-0 font-weight-bold text-primary">HABER LİSTESİ</h6>
+            <a asp-action="CreateNews" class="btn btn-success btn-sm">
+                <i class="fas fa-plus"></i> Yeni Haber Ekle
+            </a>
+        </div>
+        <div class="card-body">
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+            }
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Başlık</th>
+                            <th>Kategori</th>
+                            <th>Yayın Tarihi</th>
+                            <th>Durum</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var newsItem in Model)
+                        {
+                            <tr id="row_@newsItem.NewsId">
+                                <td>@newsItem.NewsId</td>
+                                <td>@newsItem.Title</td>
+                                <td>@(newsItem.Category?.Name ?? "Belirtilmemiş")</td>
+                                <td>@newsItem.CreatedDate.ToShortDateString()</td>
+                                <td>
+                                    <span class="badge @(newsItem.IsActive ? "badge-success" : "badge-danger")">
+                                        @(newsItem.IsActive ? "Aktif" : "Pasif")
+                                    </span>
+                                </td>
+                                <td>
+                                    <a asp-action="EditNews" asp-route-id="@newsItem.NewsId" class="btn btn-warning btn-sm">Düzenle</a>
 
-    <div class="mb-3">
-        <a href="@Url.Action("CreateNews")" class="btn btn-success">Yeni Haber Ekle</a>
+                                    @* AJAX Silme Butonu *@
+                                    <button class="btn btn-danger btn-sm delete-btn" data-id="@newsItem.NewsId">Sil (AJAX)</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-
-    @if (TempData["SuccessMessage"] != null)
-    {
-        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
-    }
-
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Başlık</th>
-                <th>Kategori</th>
-                <th>Tarih</th>
-                <th>Durum</th>
-                <th>İşlemler</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (Model != null && Model.Any())
-            {
-                @foreach (var news in Model)
-                {
-                    <tr>
-                        {{-- news.Id yerine news.NewsId kullanıldı --}}
-                        <td>@news.NewsId</td>
-                        <td>@news.Title</td>
-                        <td>@news.Category?.Name</td>
-                        public DateTime CreatedDate { get; set; } = DateTime.Now;
-                        <td>
-                            @if (news.IsActive)
-                            {
-                                <span class="badge bg-success">Aktif</span>
-                            }
-                            else
-                            {
-                                <span class="badge bg-danger">Pasif</span>
-                            }
-                        </td>
-                        <td>
-                           
-                            <a href="@Url.Action("EditNews", new { id = news.NewsId })" class="btn btn-warning btn-sm">Düzenle</a>
-                            <a href="@Url.Action("DeleteNews", new { id = news.NewsId })" class="btn btn-danger btn-sm" onclick="return confirm('Silmek istediğinize emin misiniz?')">Sil</a>
-                        </td>
-                    </tr>
-                }
-            }
-            else
-            {
-                <tr>
-                    <td colspan="6" class="text-center">Henüz haber eklenmemiş.</td>
-                </tr>
-            }
-        </tbody>
-    </table>
 </div>
+
+@section Scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Toast / Snackbar için basit bir HTML elementi ekleyelim
+            $('body').append('<div id="undoNotification" style="display:none; position:fixed; bottom:20px; right:20px; background:#333; color:white; padding:10px; border-radius:5px; z-index:10000;">Haber Silindi. <a href="#" id="undoButton" style="color:#007bff; margin-left:10px;">Geri Al</a></div>');
+
+            var lastDeletedRow = null;
+
+            // Silme Butonuna Tıklama
+            $('.delete-btn').on('click', function () {
+                var newsId = $(this).data('id');
+                var $row = $('#row_' + newsId);
+
+                if (confirm('Bu haberi silmek istediğinizden emin misiniz?')) {
+
+                    $.ajax({
+                        url: '/Admin/DeleteNews/' + newsId,
+                        type: 'POST',
+                        success: function (result) {
+                            if (result.success) {
+
+                                // 1. Satırı sayfadan hemen kaldır
+                                lastDeletedRow = $row.detach(); // Satırı DOM'dan kaldır ama bellekte tut
+
+                                // 2. Geri Alma Bildirimini göster
+                                $('#undoNotification').fadeIn(300);
+
+                                // 3. 5 saniye sonra bildirim ve geri alma imkanını kaldır
+                                setTimeout(function () {
+                                    $('#undoNotification').fadeOut(300, function() {
+                                        // 5 saniye dolduysa, haberin veritabanından kalıcı olarak silindiğini varsayabiliriz
+                                        lastDeletedRow.remove();
+                                        lastDeletedRow = null;
+                                    }); 
+                                }, 8000); // 8 saniye (8000 milisaniye)
+
+                            } else {
+                                alert('Hata: ' + result.message);
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            alert('Sunucu hatası oluştu. Silme işlemi tamamlanamadı.');
+                        }
+                    });
+                }
+            });
+
+                    // Geri Al Butonuna Tıklama Olayı (GÜNCELLENMİŞ KOD)
+        $('#undoButton').on('click', function (e) {
+            e.preventDefault();
+
+            if (lastDeletedRow) {
+                // Silinmek istenen habere ait ID'yi al.
+                var newsId = lastDeletedRow.data('id');
+
+                // Geri yükleme (RestoreNews) metodu için AJAX POST isteği gönder.
+                $.ajax({
+                    url: '/Admin/RestoreNews/' + newsId,
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.success) {
+                            // Geri yükleme başarılıysa:
+
+                            // 1. Satırı tabloya geri ekle (Görsel geri alma)
+                            $('tbody').append(lastDeletedRow);
+
+                            // 2. Geri alma imkanını sonlandır
+                            lastDeletedRow = null;
+
+                            // 3. Bildirimi gizle
+                            $('#undoNotification').fadeOut(300);
+
+                            
+
+                        } else {
+                            alert('Geri yükleme başarısız oldu: ' + result.message);
+                        }
+                    },
+                    error: function () {
+                        alert('Sunucu hatası oluştu, geri yüklenemedi.');
+                    }
+                });
+            }
+        });
+            });
+        });
+    </script>
+}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Geri Alma (Undo) bildirimi için basit bir HTML elementi ekle
+             $('body').append('<div id="undoNotification" style="display:none; position:fixed; bottom:20px; right:20px; background:#28a745; color:white; padding:15px; border-radius:8px; z-index:10000;">' +
+                     'Haber Silindi. <a href="#" id="undoButton" class="btn btn-sm btn-light ms-2">GERİ AL (5 SANİYE)</a>' +
+                     '</div>');
+            var lastDeletedRow = null;
+
+            // Silme Butonuna Tıklama Olayı
+            $('.delete-btn').on('click', function () {
+                var newsId = $(this).data('id');
+                var $row = $('#row_' + newsId); // Tablo satırını yakala
+
+                if (confirm('Bu haberi silmek istediğinizden emin misiniz?')) {
+
+                    $.ajax({
+                        url: '/Admin/DeleteNews/' + newsId,
+                        type: 'POST',
+                        // Formdan gelen Anti-Forgery Token'ı buraya eklemeniz gerekebilir
+                        // headers: { 'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() },
+                        success: function (result) {
+                            if (result.success) {
+
+                                // 1. Satırı sayfadan kaldır (detach: bellekte tut)
+                                lastDeletedRow = $row.detach();
+
+                                // 2. Geri Alma Bildirimini göster
+                                $('#undoNotification').fadeIn(300);
+
+                                // 3. 5 saniye sonra bildirimi kaldır (Bu noktada kalıcı silme varsayılır)
+                                setTimeout(function () {
+                                    $('#undoNotification').fadeOut(300);
+                                    lastDeletedRow = null;
+                                }, 8000); // 8 saniye
+
+                            } else {
+                                alert('Hata: ' + result.message);
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            alert('Sunucu hatası oluştu. Silme işlemi tamamlanamadı.');
+                        }
+                    });
+                }
+            });
+
+            // Geri Al Butonuna Tıklama Olayı
+            $('#undoButton').on('click', function (e) {
+                e.preventDefault();
+
+                if (lastDeletedRow) {
+                    // Satırı tabloya geri ekle
+                    $('tbody').append(lastDeletedRow);
+                    lastDeletedRow = null;
+
+                    // Bildirimi gizle
+                    $('#undoNotification').fadeOut(300);
+
+                    // NOT: Gerçek bir geri alma (restore) işlemi için buraya
+                    // yeni bir AJAX POST isteği (örn: /Admin/RestoreNews/newsId) yazılmalıdır.
+                    // Şu an sadece görsel olarak geri aldık.
+                }
+            });
+        });
+    </script>
+}

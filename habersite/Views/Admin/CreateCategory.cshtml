@@ -1,71 +1,62 @@
-﻿@model List<habersite.Models.Category>
+﻿@model habersite.Models.Category
 @{
-    ViewData["Title"] = "Kategori Yönetimi";
-    // Bu kodun çalışması için 'using habersite.Models;' Controller'da olmalı
+    ViewData["Title"] = "Yeni Kategori Ekle";
 }
 
-<div class="container-fluid mt-4">
+<div class="container mt-4">
 
-    @* --- Başarı Mesajı Alanı --- *@
-    @if (TempData["SuccessMessage"] != null)
-    {
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <strong>Başarılı!</strong> @TempData["SuccessMessage"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    }
+    <div class="card shadow">
 
-    <div class="card shadow mb-4">
-
-        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">@ViewData["Title"]</h5>
-            <a href="@Url.Action("CreateCategory")" class="btn btn-success btn-sm">
-                <i class="fas fa-plus"></i> Yeni Kategori Ekle
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="fas fa-folder-plus"></i> Yeni Kategori Ekle</h5>
+            <a asp-action="CategoryList" class="btn btn-light btn-sm">
+                <i class="fas fa-list"></i> Kategori Listesine Dön
             </a>
         </div>
 
         <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Ad</th>
-                            <th class="d-none d-md-table-cell">Açıklama</th>
-                            <th>Durum</th>
-                            <th>İşlemler</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var category in Model)
-                        {
-                            <tr>
-                                <td>@category.CategoryId</td> 
-                                <td>@category.Name</td>
-                                <td class="d-none d-md-table-cell">@category.Description</td>
-                                <td>
-                                    @if (category.IsActive)
-                                    {
-                                        <span class="badge bg-success">Aktif</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge bg-danger">Pasif</span>
-                                    }
-                                </td>
-                                <td>
-                                    <a href="@Url.Action("EditCategory", new { id = category.CategoryId })" class="btn btn-warning btn-sm" title="Düzenle">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <a href="@Url.Action("DeleteCategory", new { id = category.CategoryId })" class="btn btn-danger btn-sm" title="Sil" onclick="return confirm('Kategoriyi silmek istediğinize emin misiniz?')">
-                                        <i class="fas fa-trash"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+            <div class="row">
+                <div class="col-md-8">
+
+                    <form asp-action="CreateCategory" method="post">
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        {{-- Kategori Adı --}}
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label">Kategori Adı</label>
+                            <input asp-for="Name" class="form-control" placeholder="Kategori adını girin (Örn: Spor)" required />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        {{-- Kısa Açıklama --}}
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label">Kısa Açıklama</label>
+                            <textarea asp-for="Description" class="form-control" rows="3" placeholder="Kategori açıklamasını girin"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        {{-- Yayın Durumu --}}
+                        <div class="form-group form-check mb-3">
+                            <input class="form-check-input" asp-for="IsActive" />
+                            <label class="form-check-label" asp-for="IsActive">
+                                Aktif Olarak Yayınla
+                            </label>
+                        </div>
+
+                        {{-- Kaydet Butonları --}}
+                        <div class="form-group pt-2">
+                            <button type="submit" class="btn btn-primary me-2">
+                                <i class="fas fa-save"></i> Kaydet
+                            </button>
+                            <a asp-action="CategoryList" class="btn btn-secondary">
+                                İptal
+                            </a>
+                        </div>
+
+                    </form>
+                </div>
             </div>
-        </div> 
-    </div> 
+        </div>
+    </div>
 </div>
