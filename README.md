@@ -1,6 +1,6 @@
 # YILDIZ HABER PORTALI (ASP.NET CORE MVC PROJESİ)
 
-Bu proje, İnternet Programcılığı dersi Ara Sınav teslimi için hazırlanmış, temel içerik yönetim sistemine (CMS) sahip bir Yönetici Paneli uygulamasıdır.
+Bu proje, İnternet Programcılığı dersi Ara Sınav teslimi için hazırlanmış, temel içerik yönetim sistemine (CMS) sahip bir Yönetici Paneli uygulamasıdır. 
 
 ## 🚀 TEKNOLOJİLER
 - **Framework:** ASP.NET Core 7/8 (MVC)
